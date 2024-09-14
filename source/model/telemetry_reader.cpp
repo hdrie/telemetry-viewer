@@ -206,7 +206,7 @@ QVariant read_variant(file_reader &reader, telemetry_type type)
 		}
 		case telemetry_type::uint64:
 		{
-			return QVariant(reader.read_uint64());
+			return QVariant(static_cast<quint64>(reader.read_uint64()));
 		}
 
 
@@ -216,7 +216,7 @@ QVariant read_variant(file_reader &reader, telemetry_type type)
 		}
 		case telemetry_type::int64:
 		{
-			return QVariant(reader.read_int64());
+			return QVariant(static_cast<qint64>(reader.read_int64()));
 		}
 
 		case telemetry_type::floatv:
