@@ -2,6 +2,9 @@
 .idea
 cmake-build-**
 
+# linux build dir
+build/
+
 # OS nonsense
 .DS_store
 
