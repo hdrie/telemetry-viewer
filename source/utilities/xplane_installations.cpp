@@ -90,9 +90,10 @@ QString xplane_installer_get_base_path()
 	return QString("C://") + s_installer_file;
 #elif APL
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/" + s_installer_file;
-#else
-    // TODO: on Linux it's $HOME/.x-plane
-    #error "Implement for other platforms"
+#elif LIN
+    // on Linux it's $HOME/.x-plane
+	// Hauke: This seems to work from what I can see
+	return QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.x-plane/" + s_installer_file;
 #endif
 }
 
@@ -125,8 +126,13 @@ void parse_install_executables(xplane_installation &installation)
                 }
             }
         }
-#else
-	#error "Implement for other platforms"
+#elif LIN
+		// Hauke: This does not seem to work yet. 
+		// Cannot choose executable in test runner dialog and get index out of range error when running anyway.
+		if (file.isFile() && file.fileName().startsWith("X-Plane"))
+		{
+			installation.executables.push_back(file.fileName());
+		}
 #endif
 	}
 }
