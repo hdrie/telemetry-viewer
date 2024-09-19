@@ -5,6 +5,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
+# Hauke: On Linux, if the needed Qt version is not available from the package manager, 
+# set the root dir of your (compiled from source) Qt install
 set(CMAKE_PREFIX_PATH "/usr/local/Qt-6.7.0/")
 
 set(QT_COMPONENTS
@@ -68,8 +70,13 @@ set_target_properties(tlm-viewer PROPERTIES OUTPUT_NAME "Telemetry Viewer")
 target_compile_definitions(tlm-viewer PRIVATE ${DEFINITIONS})
 target_link_libraries(tlm-viewer PRIVATE ${QT_COMPONENTS})
 
-target_include_directories(tlm-viewer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(tlm-viewer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/widgets)
+# Hauke: On Linux it's necessary to include the widgets directory so that the generated ui headers can locate their includes
+set(PROJECT_INCLUDE_DIRS
+	${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
+)
+
+target_include_directories(tlm-viewer PUBLIC ${PROJECT_INCLUDE_DIRS})
 
 
 add_custom_command(TARGET tlm-viewer POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory "$<TARGET_FILE_DIR:Qt6::Core>/../plugins/platforms" "$<TARGET_FILE_DIR:tlm-viewer>/platforms")
