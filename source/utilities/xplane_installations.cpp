@@ -92,7 +92,7 @@ QString xplane_installer_get_base_path()
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + "/" + s_installer_file;
 #elif LIN
     // on Linux it's $HOME/.x-plane
-	// Hauke: This seems to work from what I can see
+	// Hauke: The HomeLocation constant from QStandardPaths locates $HOME nicely
 	return QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/.x-plane/" + s_installer_file;
 #endif
 }
@@ -127,9 +127,8 @@ void parse_install_executables(xplane_installation &installation)
             }
         }
 #elif LIN
-		// Hauke: This does not seem to work yet. 
-		// Cannot choose executable in test runner dialog and get index out of range error when running anyway.
-		if (file.isFile() && file.fileName().startsWith("X-Plane"))
+		// Hauke: Check for literal executable name and executable attribute
+		if (file.isFile() && file.fileName().startsWith("X-Plane") && file.fileName().endsWith("-x86_64") && file.isExecutable())
 		{
 			installation.executables.push_back(file.fileName());
 		}
